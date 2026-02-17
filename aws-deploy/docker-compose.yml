@@ -1,0 +1,24 @@
+version: '3.8'
+
+services:
+  minecraft:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile
+    container_name: minecraft-server
+    ports:
+      - "25565:25565"
+    volumes:
+      - minecraft-data:/minecraft/world
+      - minecraft-logs:/minecraft/logs
+    environment:
+      - EULA=TRUE
+    restart: unless-stopped
+    mem_limit: 2g
+    cpus: 1.5
+
+volumes:
+  minecraft-data:
+    driver: local
+  minecraft-logs:
+    driver: local

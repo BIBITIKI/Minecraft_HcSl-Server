@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mine and Slash サーバー - セットアップガイド</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans JP', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .step {
+            margin-bottom: 40px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border-left: 5px solid #667eea;
+        }
+        
+        .step h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        
+        .step h3 {
+            color: #555;
+            margin: 20px 0 10px 0;
+            font-size: 1.3em;
+        }
+        
+        .step ol, .step ul {
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+        
+        .step li {
+            margin-bottom: 10px;
+        }
+        
+        .mod-list {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .mod-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: #f0f0f0;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .mod-item:hover {
+            background: #e0e0e0;
+            transform: translateX(5px);
+            transition: all 0.3s;
+        }
+        
+        .mod-name {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .mod-version {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .download-btn {
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: all 0.3s;
+        }
+        
+        .download-btn:hover {
+            background: #5568d3;
+            transform: scale(1.05);
+        }
+        
+        .alert {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .alert-warning {
+            background: #fff3cd;
+            border-color: #ffc107;
+            color: #856404;
+        }
+        
+        .alert-info {
+            background: #d1ecf1;
+            border-color: #17a2b8;
+            color: #0c5460;
+        }
+        
+        .alert-success {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        
+        .badge-required {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .badge-optional {
+            background: #6c757d;
+            color: white;
+        }
+        
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #e83e8c;
+        }
+        
+        .key-combo {
+            display: inline-block;
+            background: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9em;
+        }
+        
+        footer {
+            background: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .step {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎮 Mine and Slash サーバー</h1>
+            <p>クライアント環境構築ガイド</p>
+        </header>
+        
+        <div class="content">
+            <div class="alert alert-info">
+                <strong>📋 必要なもの</strong><br>
+                • Minecraft Java Edition（バージョン 1.20.1）<br>
+                • 空き容量: 約5GB<br>
+                • 所要時間: 約15-20分
+            </div>
+            
+            <!-- Step 1 -->
+            <div class="step">
+                <h2>ステップ 1️⃣: Minecraft Forge をインストール</h2>
+                <p>Forgeは、MODを動かすために必要なツールです。</p>
+                
+                <h3>1. Forgeをダウンロード</h3>
+                <ul>
+                    <li>公式サイト: <a href="https://files.minecraftforge.net/net/minecraftforge/forge/index_1.20.1.html" target="_blank">Forge 1.20.1</a></li>
+                    <li>バージョン: <strong>1.20.1-47.4.10</strong> を選択</li>
+                    <li>「Installer」をクリックしてダウンロード</li>
+                </ul>
+                
+                <h3>2. Forgeをインストール</h3>
+                <ol>
+                    <li>ダウンロードした <code>.jar</code> ファイルをダブルクリック</li>
+                    <li>「Install client」を選択して「OK」をクリック</li>
+                    <li>インストール完了まで待つ</li>
+                </ol>
+                
+                <h3>3. Minecraftランチャーで確認</h3>
+                <ul>
+                    <li>Minecraftランチャーを開く</li>
+                    <li>左下のプロファイル選択で「forge-1.20.1-47.4.10」が追加されていることを確認</li>
+                </ul>
+            </div>
+            
+            <!-- Step 2 -->
+            <div class="step">
+                <h2>ステップ 2️⃣: 必須MODをダウンロード</h2>
+                
+                <div class="alert alert-warning">
+                    <strong>⚠️ 重要</strong><br>
+                    以下の7つのMODは<strong>必ず</strong>必要です。入れないとサーバーに接続できません。
+                </div>
+                
+                <div class="mod-list">
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Mine and Slash</span>
+                            <span class="badge badge-required">必須</span>
+                            <br><span class="mod-version">v6.3.14</span>
+                        </div>
+                        <a href="https://www.curseforge.com/minecraft/mc-mods/mine-and-slash-reloaded" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Library of Exile</span>
+                            <span class="badge badge-required">必須</span>
+                            <br><span class="mod-version">v2.1.5</span>
+                        </div>
+                        <a href="https://www.curseforge.com/minecraft/mc-mods/library-of-exile" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Dungeon Realm</span>
+                            <span class="badge badge-required">必須</span>
+                            <br><span class="mod-version">v1.1.7</span>
+                        </div>
+                        <a href="https://www.curseforge.com/minecraft/mc-mods/dungeon-realm" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">The Harvest</span>
+                            <span class="badge badge-required">必須</span>
+                            <br><span class="mod-version">v1.1.3</span>
+                        </div>
+                        <a href="https://www.curseforge.com/minecraft/mc-mods/the-harvest" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Ancient Obelisks</span>
+                            <span class="badge badge-required">必須</span>
+                            <br><span class="mod-version">v1.2.3</span>
+                        </div>
+                        <a href="https://www.curseforge.com/minecraft/mc-mods/ancient-obelisks" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Curios API</span>
+                            <span class="badge badge-required">必須</span>
+                            <br><span class="mod-version">v5.14.1</span>
+                        </div>
+                        <a href="https://www.curseforge.com/minecraft/mc-mods/curios" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Player Animation Lib</span>
+                            <span class="badge badge-required">必須</span>
+                            <br><span class="mod-version">v1.0.2</span>
+                        </div>
+                        <a href="https://www.curseforge.com/minecraft/mc-mods/playeranimator" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                </div>
+                
+                <div class="alert alert-warning">
+                    <strong>📝 ダウンロード時の注意</strong><br>
+                    • 各ページで「Files」タブを開く<br>
+                    • <strong>1.20.1対応版</strong>を選択してダウンロード<br>
+                    • ダウンロードボタンは右側にあります
+                </div>
+            </div>
+            
+            <!-- Step 3 -->
+            <div class="step">
+                <h2>ステップ 3️⃣: MODをインストール</h2>
+                
+                <h3>1. modsフォルダを開く</h3>
+                <ol>
+                    <li><span class="key-combo">Windowsキー + R</span> を押す</li>
+                    <li><code>%appdata%\.minecraft</code> と入力してEnter</li>
+                    <li><code>mods</code> フォルダを開く（なければ作成）</li>
+                </ol>
+                
+                <h3>2. MODファイルを配置</h3>
+                <ul>
+                    <li>ダウンロードした7つの <code>.jar</code> ファイルを <code>mods</code> フォルダにコピー</li>
+                    <li><strong>ZIPファイルは解凍しないでください</strong></li>
+                </ul>
+            </div>
+            
+            <!-- Step 4 -->
+            <div class="step">
+                <h2>ステップ 4️⃣: 日本語化リソースパックをダウンロード</h2>
+                <p>アイテムやスキルの説明を日本語で表示するために必要です。</p>
+                
+                <div class="alert alert-info">
+                    <strong>📥 ダウンロード元</strong><br>
+                    以下のブログから各リソースパックをダウンロード:<br>
+                    <a href="https://www.mine-blog.tech/mine-and-slash-6-3-x/" target="_blank">Mine-Tech ブログ</a>
+                </div>
+                
+                <div class="mod-list">
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Mine and Slash 日本語化</span>
+                            <span class="badge badge-required">必須</span>
+                            <br><span class="mod-version">v6.3.8</span>
+                        </div>
+                        <a href="https://www.mine-blog.tech/mine-and-slash-6-3-x/" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Library of Exile 日本語化</span>
+                            <span class="badge badge-required">必須</span>
+                        </div>
+                        <a href="https://www.mine-blog.tech/library-of-exile/" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Dungeon Realm 日本語化</span>
+                            <span class="badge badge-required">必須</span>
+                        </div>
+                        <a href="https://www.mine-blog.tech/dungeon-realm/" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">The Harvest 日本語化</span>
+                            <span class="badge badge-required">必須</span>
+                        </div>
+                        <a href="https://www.mine-blog.tech/the-harvest/" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Ancient Obelisks 日本語化</span>
+                            <span class="badge badge-required">必須</span>
+                        </div>
+                        <a href="https://www.mine-blog.tech/ancient-obelisks/" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Alacrity</span>
+                            <span class="badge badge-optional">推奨</span>
+                            <br><span class="mod-version">RPG風テクスチャ</span>
+                        </div>
+                        <a href="https://www.curseforge.com/minecraft/texture-packs/alacrity" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Step 5 -->
+            <div class="step">
+                <h2>ステップ 5️⃣: リソースパックをインストール</h2>
+                
+                <h3>1. resourcepacksフォルダを開く</h3>
+                <ol>
+                    <li><span class="key-combo">Windowsキー + R</span> を押す</li>
+                    <li><code>%appdata%\.minecraft</code> と入力してEnter</li>
+                    <li><code>resourcepacks</code> フォルダを開く（なければ作成）</li>
+                </ol>
+                
+                <h3>2. リソースパックを配置</h3>
+                <ul>
+                    <li>ダウンロードした <code>.zip</code> ファイルを <code>resourcepacks</code> フォルダにコピー</li>
+                    <li><strong>解凍しないでください</strong></li>
+                </ul>
+            </div>
+            
+            <!-- Step 6 -->
+            <div class="step">
+                <h2>ステップ 6️⃣: Minecraftを起動して設定</h2>
+                
+                <h3>1. Forgeプロファイルで起動</h3>
+                <ol>
+                    <li>Minecraftランチャーを開く</li>
+                    <li>左下で「forge-1.20.1-47.4.10」を選択</li>
+                    <li>「プレイ」をクリック</li>
+                </ol>
+                
+                <h3>2. リソースパックを有効化</h3>
+                <ol>
+                    <li>メニューから「設定」→「リソースパック」を開く</li>
+                    <li>左側の利用可能なパックから、右側の選択中に移動</li>
+                    <li><strong>順番が重要</strong>: 上から順に
+                        <ol>
+                            <li>Alacrity（入れた場合）</li>
+                            <li>Mine and Slash 日本語化</li>
+                            <li>Library of Exile 日本語化</li>
+                            <li>Dungeon Realm 日本語化</li>
+                            <li>The Harvest 日本語化</li>
+                            <li>Ancient Obelisks 日本語化</li>
+                        </ol>
+                    </li>
+                    <li>「完了」をクリック</li>
+                </ol>
+                
+                <h3>3. MODが読み込まれたか確認</h3>
+                <ul>
+                    <li>メインメニューに「Mods」ボタンが表示されていればOK</li>
+                    <li>クリックして7つのMODが表示されることを確認</li>
+                </ul>
+            </div>
+            
+            <!-- Step 7 -->
+            <div class="step">
+                <h2>ステップ 7️⃣: サーバーに接続</h2>
+                
+                <h3>1. サーバーアドレスを確認</h3>
+                <ul>
+                    <li>Discordの <code>#server-status</code> チャンネルで <code>/status</code> コマンドを実行</li>
+                    <li>サーバーが停止中の場合は <code>/start</code> で起動</li>
+                </ul>
+                
+                <h3>2. マルチプレイに接続</h3>
+                <ol>
+                    <li>Minecraftのメインメニューから「マルチプレイ」を選択</li>
+                    <li>「サーバーを追加」をクリック</li>
+                    <li>サーバー名: 好きな名前（例: Mine and Slash Server）</li>
+                    <li>サーバーアドレス: Discordで確認したIPアドレス</li>
+                    <li>「完了」→ サーバーをダブルクリックして接続</li>
+                </ol>
+                
+                <div class="alert alert-success">
+                    <strong>🎉 完了！</strong><br>
+                    これでサーバーに接続できます。楽しいハクスラライフを！
+                </div>
+            </div>
+            
+            <!-- Optional Mods -->
+            <div class="step">
+                <h2>🔧 推奨クライアント専用MOD（任意）</h2>
+                <p>より快適にプレイするための追加MOD:</p>
+                
+                <div class="mod-list">
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">JEI (Just Enough Items)</span>
+                            <span class="badge badge-optional">推奨</span>
+                            <br><span class="mod-version">レシピ確認</span>
+                        </div>
+                        <a href="https://www.curseforge.com/minecraft/mc-mods/jei" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">JourneyMap</span>
+                            <span class="badge badge-optional">推奨</span>
+                            <br><span class="mod-version">マップ表示</span>
+                        </div>
+                        <a href="https://www.curseforge.com/minecraft/mc-mods/journeymap" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Embeddium</span>
+                            <span class="badge badge-optional">推奨</span>
+                            <br><span class="mod-version">パフォーマンス向上</span>
+                        </div>
+                        <a href="https://www.curseforge.com/minecraft/mc-mods/embeddium" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                    
+                    <div class="mod-item">
+                        <div>
+                            <span class="mod-name">Loot Journal</span>
+                            <span class="badge badge-optional">推奨</span>
+                            <br><span class="mod-version">ドロップアイテム記録</span>
+                        </div>
+                        <a href="https://www.curseforge.com/minecraft/mc-mods/loot-journal" target="_blank" class="download-btn">ダウンロード</a>
+                    </div>
+                </div>
+                
+                <p>これらも <code>mods</code> フォルダに入れるだけで使えます。</p>
+            </div>
+            
+            <!-- Troubleshooting -->
+            <div class="step">
+                <h2>❓ トラブルシューティング</h2>
+                
+                <h3>接続できない場合</h3>
+                <ul>
+                    <li>サーバーが起動しているか確認（<code>/status</code> コマンド）</li>
+                    <li>必須MOD 7つが全て入っているか確認</li>
+                    <li>Forgeバージョンが 1.20.1-47.4.10 か確認</li>
+                </ul>
+                
+                <h3>クラッシュする場合</h3>
+                <ul>
+                    <li>MODのバージョンが 1.20.1 対応か確認</li>
+                    <li>他のMODと競合していないか確認（必須MOD以外を一旦削除）</li>
+                </ul>
+                
+                <h3>日本語が表示されない場合</h3>
+                <ul>
+                    <li>リソースパックが有効化されているか確認</li>
+                    <li>リソースパックの順番を確認（Alacrity → 日本語化パック）</li>
+                </ul>
+                
+                <div class="alert alert-info">
+                    <strong>📞 サポート</strong><br>
+                    わからないことがあれば、Discordの <code>#help</code> チャンネルで質問してください！
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Mine and Slash Server © 2026</p>
+            <p>Discord Bot で <code>/mods</code> コマンドを実行すると、MOD一覧を確認できます</p>
+        </footer>
+    </div>
+</body>
+</html>

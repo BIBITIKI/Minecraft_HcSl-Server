@@ -1,0 +1,26 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# AWS
+*.pem
+*.key
+
+# Logs
+*.log
+
+# Zip files
+*.zip
+
+# Server files (downloaded from EC2)
+server-files/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Sensitive data
+*.env
+secrets/
