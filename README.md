@@ -6,7 +6,7 @@ AWS EC2上で動作するMine and Slash MODサーバーのインフラストラ�
 
 サーバーで遊ぶための環境構築手順はこちら:
 
-**📖 [セットアップガイド](https://bibitiki.github.io/Minecraft_HcSl-Server/)**
+**📖 [セットアップガイド](https://BIBITIKI.github.io/Minecraft_HcSl-Server/)**
 
 ## 🏗️ インフラ構成
 

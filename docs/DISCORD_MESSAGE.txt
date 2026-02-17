@@ -7,7 +7,7 @@
 サーバーで遊ぶための環境構築手順です。初心者の方でも15-20分で完了します。
 
 📖 **詳しい手順はこちら**
-https://[あなたのGitHubユーザー名].github.io/Minecraft_HcSl-Server/
+https://BIBITIKI.github.io/Minecraft_HcSl-Server/
 
 📋 **必要なもの**
 • Minecraft Java Edition 1.20.1
@@ -34,7 +34,7 @@ https://[あなたのGitHubユーザー名].github.io/Minecraft_HcSl-Server/
 各MODのCurseForgeページから「Files」タブを開き、**1.20.1対応版**をダウンロード
 
 🔗 **ダウンロードリンク**
-詳細ページに全てのリンクがあります: https://[URL]
+詳細ページに全てのリンクがあります: https://BIBITIKI.github.io/Minecraft_HcSl-Server/
 
 または Discord Bot で `/mods` コマンドを実行
 ```
@@ -62,7 +62,7 @@ Mine-Tech ブログ: https://www.mine-blog.tech/mine-and-slash-6-3-x/
 ---
 
 ❓ **困ったときは**
-• 詳しい手順: https://[URL]
+• 詳しい手順: https://BIBITIKI.github.io/Minecraft_HcSl-Server/
 • Discord Bot: `/mods` または `/help`
 • サポート: #help チャンネルで質問
 
@@ -87,6 +87,4 @@ Mine-Tech ブログ: https://www.mine-blog.tech/mine-and-slash-6-3-x/
 6. Save をクリック
 
 7. 数分後、以下のURLでアクセス可能:
-   https://[あなたのGitHubユーザー名].github.io/Minecraft_HcSl-Server/
-
-8. Discord投稿用メッセージの [URL] 部分を実際のURLに置き換えて投稿
+   https://BIBITIKI.github.io/Minecraft_HcSl-Server/
