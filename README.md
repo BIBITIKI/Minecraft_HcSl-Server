@@ -1,51 +1,46 @@
-# Mine and Slash Minecraft Server
+# Mine and Slash サーバー - クライアント環境構築ガイド
 
-AWS EC2上で動作するMine and Slash MODサーバーのインフラストラクチャとクライアント環境構築ガイド。
+このリポジトリは、Mine and Slash Minecraftサーバーで遊ぶためのクライアント環境構築ガイドを提供します。
 
-## 🎮 クライアント環境構築ガイド
+## 📖 セットアップガイド
 
-サーバーで遊ぶための環境構築手順はこちら:
+**[クライアント環境構築ガイドを見る](https://BIBITIKI.github.io/Minecraft_HcSl-Server/)**
 
-**📖 [セットアップガイド](https://BIBITIKI.github.io/Minecraft_HcSl-Server/)**
+## 🎮 サーバー情報
 
-## 🏗️ インフラ構成
-
-- **EC2**: t3a.medium (Minecraft サーバー)
-- **Lambda**: サーバー起動/停止/ステータス管理
-- **API Gateway**: Discord Bot からの操作エンドポイント
-- **CloudWatch Events**: 深夜3時自動停止
-- **SSM**: サーバー管理とコマンド実行
+- **Minecraft バージョン**: 1.20.1
+- **Forge バージョン**: 1.20.1-47.4.10
+- **メインMOD**: Mine and Slash (v6.3.14)
 
 ## 📦 必須MOD
 
-- Mine and Slash (v6.3.14)
-- Library of Exile (v2.1.5)
-- Dungeon Realm (v1.1.7)
-- The Harvest (v1.1.3)
-- Ancient Obelisks (v1.2.3)
-- Curios API (v5.14.1)
-- Player Animation Lib (v1.0.2)
+サーバーに接続するには、以下の7つのMODが必要です:
+
+1. Mine and Slash (v6.3.14)
+2. Library of Exile (v2.1.5)
+3. Dungeon Realm (v1.1.7)
+4. The Harvest (v1.1.3)
+5. Ancient Obelisks (v1.2.3)
+6. Curios API (v5.14.1)
+7. Player Animation Lib (v1.0.2)
+
+詳しいダウンロード方法とインストール手順は、[セットアップガイド](https://BIBITIKI.github.io/Minecraft_HcSl-Server/)をご覧ください。
 
 ## 🤖 Discord Bot
 
-サーバー管理用Discord Bot: [minecraft-discord-bot](https://github.com/BIBITIKI/minecraft-discord-bot)
+サーバーの起動・停止はDiscord Botで管理しています。
 
-### 主なコマンド
-
+主なコマンド:
 - `/start` - サーバー起動
 - `/stop` - サーバー停止
 - `/status` - サーバー状態確認
 - `/mods` - MOD一覧表示
 - `/info` - サーバー情報表示
 
-## 🚀 デプロイ
+## 📞 サポート
 
-```bash
-cd aws-deploy/terraform
-terraform init
-terraform apply
-```
+わからないことがあれば、Discordの `#help` チャンネルで質問してください。
 
-## 📝 ライセンス
+---
 
-MIT License
+Mine and Slash Server © 2026
