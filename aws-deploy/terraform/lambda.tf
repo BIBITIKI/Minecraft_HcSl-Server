@@ -37,6 +37,7 @@ resource "aws_iam_role_policy" "lambda_minecraft_policy" {
         Action = [
           "ssm:SendCommand",
           "ssm:GetCommandInvocation",
+          "ssm:ListCommandInvocations",
           "ssm:GetParameter",
           "ssm:PutParameter"
         ]
@@ -210,6 +211,11 @@ output "lambda_status_url" {
   description = "Lambda function URL for checking server status (use in Discord Bot)"
 }
 
+output "lambda_config_url" {
+  value       = aws_lambda_function_url.update_config_minecraft.function_url
+  description = "Lambda function URL for updating server config (use in Discord Bot)"
+}
+
 # Lambda関数: ログ取得
 resource "aws_lambda_function" "get_logs_minecraft" {
   filename      = "${path.module}/../lambda/get_logs.zip"
@@ -236,7 +242,7 @@ resource "aws_lambda_function" "update_config_minecraft" {
   role          = aws_iam_role.lambda_minecraft.arn
   handler       = "update_config.lambda_handler"
   runtime       = "python3.11"
-  timeout       = 30
+  timeout       = 60
   source_code_hash = filebase64sha256("${path.module}/../lambda/update_config.zip")
 
   environment {
@@ -246,6 +252,26 @@ resource "aws_lambda_function" "update_config_minecraft" {
   }
 
   depends_on = [aws_iam_role_policy.lambda_minecraft_policy]
+}
+
+# Lambda関数URL: 設定更新
+resource "aws_lambda_function_url" "update_config_minecraft" {
+  function_name      = aws_lambda_function.update_config_minecraft.function_name
+  authorization_type = "NONE"
+
+  cors {
+    allow_origins = ["*"]
+    allow_methods = ["GET", "POST"]
+    max_age       = 86400
+  }
+}
+
+resource "aws_lambda_permission" "allow_function_url_update_config" {
+  statement_id           = "FunctionURLAllowPublicAccess"
+  action                 = "lambda:InvokeFunctionUrl"
+  function_name          = aws_lambda_function.update_config_minecraft.function_name
+  principal              = "*"
+  function_url_auth_type = "NONE"
 }
 
 # Lambda関数: Discord通知送信
