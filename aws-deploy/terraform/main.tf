@@ -107,22 +107,31 @@ resource "aws_instance" "minecraft" {
   key_name               = var.key_pair_name
   vpc_security_group_ids = [aws_security_group.minecraft.id]
   iam_instance_profile   = aws_iam_instance_profile.minecraft.name
+  
+  # Prevent accidental termination
+  disable_api_termination = true
 
   root_block_device {
     volume_type           = "gp3"
     volume_size           = var.ebs_volume_size
-    delete_on_termination = true
+    delete_on_termination = false  # Keep EBS volume even if instance is terminated
   }
 
   user_data = base64encode(templatefile("${path.module}/../user-data.sh", {
     minecraft_memory = var.minecraft_memory
     auto_shutdown_script = file("${path.module}/../auto-shutdown.sh")
     discord_webhook_url = var.discord_webhook_url
+    s3_bucket = "minecraft-server-mods-temp"
   }))
 
   tags = {
     Name = "minecraft-server"
     AutoShutdown = "true"
+  }
+  
+  # Prevent Terraform from destroying this instance
+  lifecycle {
+    prevent_destroy = true
   }
 }
 
