@@ -24,13 +24,39 @@ def lambda_handler(event, context):
         
         if state == 'running':
             try:
-                # SSM経由でauto-shutdownログからプレイヤー数を取得
+                # SSM経由でMinecraftサーバーの/listコマンドを実行してプレイヤー数を取得
                 ssm_response = ssm.send_command(
                     InstanceIds=[instance_id],
                     DocumentName='AWS-RunShellScript',
                     Parameters={
                         'commands': [
-                            'tail -n 100 /var/log/minecraft-autoshutdown.log | grep "Player count changed" | tail -1 | grep -oP "current: \\K[^)]*" || echo "0"'
+                            # RCONまたはログから現在のプレイヤー数を取得
+                            '''
+                            LOG_FILE="/home/ec2-user/minecraft/logs/latest.log"
+                            if [ -f "$LOG_FILE" ]; then
+                                # 最新のログから現在オンラインのプレイヤーを特定
+                                # 各プレイヤーの最後のイベント（join/leave）を確認
+                                tail -n 500 "$LOG_FILE" | grep -E "joined the game|left the game" | awk '{
+                                    # Extract player name (before "joined" or "left")
+                                    for(i=1; i<=NF; i++) {
+                                        if($i == "joined" || $i == "left") {
+                                            player = $(i-1)
+                                            action = $i
+                                            players[player] = action
+                                        }
+                                    }
+                                }
+                                END {
+                                    count = 0
+                                    for(p in players) {
+                                        if(players[p] == "joined") count++
+                                    }
+                                    print count
+                                }'
+                            else
+                                echo 0
+                            fi
+                            '''
                         ]
                     },
                     TimeoutSeconds=30
@@ -38,8 +64,8 @@ def lambda_handler(event, context):
                 
                 command_id = ssm_response['Command']['CommandId']
                 
-                # コマンド実行完了を待つ（最大3秒）
-                for _ in range(3):
+                # コマンド実行完了を待つ（最大5秒）
+                for _ in range(5):
                     time.sleep(1)
                     output_response = ssm.get_command_invocation(
                         CommandId=command_id,
@@ -49,13 +75,8 @@ def lambda_handler(event, context):
                     if output_response['Status'] in ['Success', 'Failed']:
                         if output_response['Status'] == 'Success':
                             output = output_response['StandardOutputContent'].strip()
-                            if output:
-                                # "player1, player2" または "none" または "0"
-                                if output == 'none' or output == '0':
-                                    player_count = 0
-                                else:
-                                    # カンマで分割してプレイヤー数をカウント
-                                    player_count = len([p for p in output.split(',') if p.strip()])
+                            if output and output.isdigit():
+                                player_count = int(output)
                         break
             except Exception as e:
                 print(f"プレイヤー数取得エラー: {e}")
