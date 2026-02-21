@@ -5,7 +5,7 @@ import urllib.request
 import urllib.parse
 
 ssm = boto3.client('ssm', region_name='ap-northeast-1')
-INSTANCE_ID = os.environ.get('INSTANCE_ID', 'i-0b3b312b21a19f71b')
+INSTANCE_ID = os.environ.get('INSTANCE_ID', 'i-0e71ec8304bf61354')
 DISCORD_BOT_URL = os.environ.get('DISCORD_BOT_URL', '')
 
 def lambda_handler(event, context):

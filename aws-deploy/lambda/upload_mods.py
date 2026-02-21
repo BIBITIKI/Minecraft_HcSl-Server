@@ -5,7 +5,7 @@ import base64
 
 ssm = boto3.client('ssm', region_name='ap-northeast-1')
 s3 = boto3.client('s3', region_name='ap-northeast-1')
-INSTANCE_ID = os.environ.get('INSTANCE_ID', 'i-0b3b312b21a19f71b')
+INSTANCE_ID = os.environ.get('INSTANCE_ID', 'i-0e71ec8304bf61354')
 S3_BUCKET = os.environ.get('S3_BUCKET', 'minecraft-server-mods-temp')
 
 def lambda_handler(event, context):

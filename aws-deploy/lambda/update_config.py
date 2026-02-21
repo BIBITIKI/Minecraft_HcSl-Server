@@ -5,8 +5,19 @@ import base64
 
 ssm = boto3.client('ssm', region_name='ap-northeast-1')
 s3 = boto3.client('s3', region_name='ap-northeast-1')
-INSTANCE_ID = os.environ.get('INSTANCE_ID', 'i-0b3b312b21a19f71b')
+ec2 = boto3.client('ec2', region_name='ap-northeast-1')
+INSTANCE_ID = os.environ.get('INSTANCE_ID', 'i-0e71ec8304bf61354')
 S3_BUCKET = os.environ.get('S3_BUCKET', 'minecraft-server-mods-temp')
+
+def is_instance_running():
+    """EC2インスタンスが起動中かチェック"""
+    try:
+        response = ec2.describe_instances(InstanceIds=[INSTANCE_ID])
+        state = response['Reservations'][0]['Instances'][0]['State']['Name']
+        return state == 'running'
+    except Exception as e:
+        print(f"Error checking instance state: {str(e)}")
+        return False
 
 def lambda_handler(event, context):
     try:
@@ -133,27 +144,63 @@ echo "MOD files updated: {', '.join(uploaded_files)}"
                     })
                 }
             
-            # SSM Run Commandでserver.propertiesを更新
-            command = f"""
-            cd /home/ubuntu/minecraft
-            sed -i 's/^{property_name}=.*/{property_name}={property_value}/' server.properties
-            sudo systemctl restart minecraft
-            """
+            # インスタンスの状態をチェック
+            instance_running = is_instance_running()
             
-            response = ssm.send_command(
-                InstanceIds=[INSTANCE_ID],
-                DocumentName='AWS-RunShellScript',
-                Parameters={'commands': [command]}
-            )
-            
-            return {
-                'statusCode': 200,
-                'body': json.dumps({
-                    'success': True,
-                    'message': f'{property_name}を{property_value}に設定しました。サーバーを再起動しています...',
-                    'command_id': response['Command']['CommandId']
-                })
-            }
+            if instance_running:
+                # 起動中の場合: SSM Run Commandで直接更新
+                command = f"""
+                cd /home/ubuntu/minecraft
+                sed -i 's/^{property_name}=.*/{property_name}={property_value}/' server.properties
+                sudo systemctl restart minecraft
+                """
+                
+                response = ssm.send_command(
+                    InstanceIds=[INSTANCE_ID],
+                    DocumentName='AWS-RunShellScript',
+                    Parameters={'commands': [command]}
+                )
+                
+                return {
+                    'statusCode': 200,
+                    'body': json.dumps({
+                        'success': True,
+                        'message': f'{property_name}を{property_value}に設定しました。サーバーを再起動しています...',
+                        'command_id': response['Command']['CommandId'],
+                        'applied': 'immediate'
+                    })
+                }
+            else:
+                # 停止中の場合: S3に設定を保存し、次回起動時に反映
+                config_key = f'config/{INSTANCE_ID}/server.properties.updates'
+                
+                # 既存の更新設定を取得
+                try:
+                    existing_config = s3.get_object(Bucket=S3_BUCKET, Key=config_key)
+                    updates = json.loads(existing_config['Body'].read().decode('utf-8'))
+                except s3.exceptions.NoSuchKey:
+                    updates = {}
+                
+                # 新しい設定を追加
+                updates[property_name] = property_value
+                
+                # S3に保存
+                s3.put_object(
+                    Bucket=S3_BUCKET,
+                    Key=config_key,
+                    Body=json.dumps(updates),
+                    ContentType='application/json'
+                )
+                
+                return {
+                    'statusCode': 200,
+                    'body': json.dumps({
+                        'success': True,
+                        'message': f'{property_name}を{property_value}に設定しました。次回サーバー起動時に反映されます。',
+                        'applied': 'next_startup',
+                        'pending_updates': updates
+                    })
+                }
         
         # 自動停止時間の設定を更新
         if 'idle_time' in params:
